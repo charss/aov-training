@@ -14,7 +14,14 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = DB::table('books')->get();
+        DB::statement("SET SQL_MODE=''");
+        $books = DB::table('books')
+                    ->leftjoin('book_author', 'books.id', '=', 'book_author.book_id')
+                    ->leftjoin('authors', 'authors.id', '=', 'book_author.author_id')
+                    ->select('books.id', 'books.title as title', DB::raw("GROUP_CONCAT(authors.name SEPARATOR ', ') as author"))
+                    ->groupBy('books.id')
+                    ->get();
+    
         return response($books, 200);
     }
 
