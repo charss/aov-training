@@ -4,7 +4,7 @@ import Link from "next/link";
 import Router from "next/router";
 
 export const getStaticProps = async () => {
-  const res = await fetch("http://127.0.0.1:8000/api/books");
+  const res = await fetch(process.env.LOCAL_API + "books/");
   const data = await res.json();
   return {
     props: {
@@ -14,7 +14,8 @@ export const getStaticProps = async () => {
 };
 
 const deleteBook = async (id) => {
-  const url = "http://127.0.0.1:8000/api/books/" + id;
+  const url = process.env.LOCAL_API + "books/" + id;
+  console.log(url);
   const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",

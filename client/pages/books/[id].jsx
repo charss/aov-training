@@ -5,23 +5,23 @@ import Router from "next/router";
 
 export async function getServerSideProps(context) {
   const { id } = context.query;
-  const res = await fetch(`http://127.0.0.1:8000/api/books/${id}`);
+  const res = await fetch(process.env.LOCAL_API + "books/" + id);
   const data = await res.json();
 
   return { props: { book: data[0] } };
 }
 
-export default function BookDetail({book}) {
+export default function BookDetail({ book }) {
   const router = useRouter();
   const id = router.query.id;
 
   const updateBook = async (event) => {
     event.preventDefault();
     const title = event.target.title.value;
-    const url = `http://127.0.0.1:8000/api/books/${id}`;
+    const url = process.env.LOCAL_API + "books/" + id;
     const res = await fetch(url, {
       body: JSON.stringify({
-        title: title
+        title: title,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -30,8 +30,8 @@ export default function BookDetail({book}) {
     });
     if (res.status == 200) {
       // Success
-      Router.push('/books')
-    }    
+      Router.push("/books");
+    }
   };
 
   return (
