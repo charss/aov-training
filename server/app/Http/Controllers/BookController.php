@@ -35,7 +35,7 @@ class BookController extends Controller
 
         // returns 1 if row is updated
         $insert = DB::table('books')->insert($inputs);
-        return response('', 201);
+        return response(["message"=>"Book added successfully"], 201);
     }
 
     /**
@@ -66,7 +66,7 @@ class BookController extends Controller
         $input = $request->all();
         $data->update($input);
 
-        return response('', 200);
+        return response(["message" => "Book updated successfully"], 200);
     }
 
     /**
