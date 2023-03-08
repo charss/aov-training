@@ -5,7 +5,7 @@ import Router from "next/router";
 const submitBook = async (event) => {
   event.preventDefault();
   const title = event.target.title.value;
-  const url = "http://127.0.0.1:8000/api/books";
+  const url = process.env.LOCAL_API + "books";
   const res = await fetch(url, {
     body: JSON.stringify({
       books: [
