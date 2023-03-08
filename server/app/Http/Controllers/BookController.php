@@ -14,7 +14,14 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = DB::table('books')->get();
+        DB::statement("SET SQL_MODE=''");
+        $books = DB::table('books')
+                    ->leftjoin('book_author', 'books.id', '=', 'book_author.book_id')
+                    ->leftjoin('authors', 'authors.id', '=', 'book_author.author_id')
+                    ->select('books.id', 'books.title as title', DB::raw("GROUP_CONCAT(authors.name SEPARATOR ', ') as author"))
+                    ->groupBy('books.id')
+                    ->get();
+    
         return response($books, 200);
     }
 
@@ -35,7 +42,7 @@ class BookController extends Controller
 
         // returns 1 if row is updated
         $insert = DB::table('books')->insert($inputs);
-        return response('', 201);
+        return response(["message"=>"Book added successfully"], 201);
     }
 
     /**
@@ -66,7 +73,7 @@ class BookController extends Controller
         $input = $request->all();
         $data->update($input);
 
-        return response('', 200);
+        return response(["message" => "Book updated successfully"], 200);
     }
 
     /**
